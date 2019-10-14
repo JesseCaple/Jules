@@ -125,9 +125,13 @@ namespace Jules
 
         private async Task MessageReceived(SocketMessage message)
         {
-            if (message.Author.IsBot) return;
-
-            await services.GetRequiredService<FronterProxyService>().HandleMessage(message);
+            if (!message.Author.IsBot)
+            {
+                if (await services.GetRequiredService<FronterProxyService>().HandleMessage(message))
+                {
+                    return;
+                }
+            }
 
             if (message.Content.StartsWith('.'))
             {
