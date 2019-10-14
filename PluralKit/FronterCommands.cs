@@ -40,6 +40,8 @@ namespace Jules.PluralKit
             var memberNameUpper = memberName.ToUpperInvariant();
             var user = Context.User;
 
+            if (user.IsBot || user.IsWebhook) return;
+
             var system = await pk.GetSystem(user.Id);
             if (system == null)
             {

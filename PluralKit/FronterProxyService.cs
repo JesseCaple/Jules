@@ -29,6 +29,7 @@ namespace Jules.PluralKit
         public async Task<bool> HandleMessage(SocketMessage message)
         {
             if (message == null
+                || message.Author.IsBot
                 || !(message.Channel is ITextChannel)
                 || (message.Content.Length == 0 && message.Attachments.Count == 0))
             {

@@ -125,33 +125,49 @@ namespace Jules
 
         private async Task MessageReceived(SocketMessage message)
         {
-            if (!message.Author.IsBot)
+            bool switchCommand = message.Content.StartsWith(".s", StringComparison.OrdinalIgnoreCase);
+            if (switchCommand)
             {
-                if (await services.GetRequiredService<FronterProxyService>().HandleMessage(message))
-                {
-                    return;
-                }
+                switchCommand = true;
+                await ExecuteCommand((SocketUserMessage)message);
+            }
+           
+            bool proxied = await services.GetRequiredService<FronterProxyService>().HandleMessage(message);
+            if (proxied)
+            {
+                return;
+            }
+
+            if (switchCommand)
+            {
+                return;
             }
 
             if (message.Content.StartsWith('.'))
             {
-                var context = new SocketCommandContext(client, (SocketUserMessage) message);
-                var result = await commands.ExecuteAsync(context, 1, services);
-                if (!result.IsSuccess)
-                {
-                    if (result.Error != CommandError.UnknownCommand)
-                    {
-                        services.GetRequiredService<ILogger<Bot>>().LogError(result.ErrorReason);
-                        await message.Channel.SendMessageAsync(result.ErrorReason);
-                    }
-                }
+                await ExecuteCommand((SocketUserMessage)message);
             }
-            else if (message.Content.StartsWith("https://open.spotify", StringComparison.OrdinalIgnoreCase) 
-                || message.Content.StartsWith("https://play.google.com/music", StringComparison.OrdinalIgnoreCase) 
+            else if (message.Content.StartsWith("https://open.spotify", StringComparison.OrdinalIgnoreCase)
+                || message.Content.StartsWith("https://play.google.com/music", StringComparison.OrdinalIgnoreCase)
                 || message.Content.StartsWith("https://music.apple", StringComparison.OrdinalIgnoreCase))
             {
                 string content = "> Universal Link: https://songwhip.com/convert?url=" + message.Content;
                 await message.Channel.SendMessageAsync(content);
+            }
+
+        }
+
+        private async Task ExecuteCommand(SocketUserMessage message)
+        {
+            var context = new SocketCommandContext(client, message);
+            var result = await commands.ExecuteAsync(context, 1, services);
+            if (!result.IsSuccess)
+            {
+                if (result.Error != CommandError.UnknownCommand)
+                {
+                    services.GetRequiredService<ILogger<Bot>>().LogError(result.ErrorReason);
+                    await message.Channel.SendMessageAsync(result.ErrorReason);
+                }
             }
         }
 

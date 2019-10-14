@@ -12,7 +12,7 @@ namespace Jules.PluralKit
 {
     public sealed class WebhookCacheService
     {
-        public static readonly string WebhookName = "PluralKit Proxy Webhook";
+        public static readonly string WebhookName = "Jules PKP Webhook";
 
         private IDiscordClient _client;
         private ConcurrentDictionary<ulong, Lazy<Task<IWebhook>>> _webhooks;
