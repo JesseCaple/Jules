@@ -41,7 +41,7 @@ namespace Jules
         }
 
         [Command("catbreathe")]
-        [Alias("catbreath", "catbreth", "breathe2", "breath2", "breth2")]
+        [Alias("catbreath", "catbreth", "breathecat", "breathcat", "brethcat")]
         [Summary("posts breathing image (with a cute cat)")]
         public async Task CatBreatheAsync()
         {
