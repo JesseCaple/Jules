@@ -5,5 +5,6 @@
         public string Token { get; set; }
         public string CatAPIKey { get; set; }
         public string MashapeKey { get; set; }
+        public object ImgurId { get; set; }
     }
 }
