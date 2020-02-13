@@ -138,11 +138,11 @@ namespace Jules.PluralKit
                                 {
                                     g.DrawImage(avatars[0],
                                         new Rectangle(0, 0, 40, 80),
-                                        new Rectangle(avatars[0].Width/4, 0, avatars[0].Width/4*3, avatars[0].Height),
+                                        new Rectangle(avatars[0].Width/4, 0, avatars[0].Width/2, avatars[0].Height),
                                         GraphicsUnit.Pixel);
                                     g.DrawImage(avatars[1],
                                         new Rectangle(40, 0, 40, 80),
-                                        new Rectangle(avatars[1].Width/4, 0, avatars[1].Width/4*3, avatars[1].Height),
+                                        new Rectangle(avatars[1].Width/4, 0, avatars[1].Width/2, avatars[1].Height),
                                         GraphicsUnit.Pixel);
                                 }
                             }
