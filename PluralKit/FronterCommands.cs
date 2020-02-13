@@ -130,42 +130,52 @@ namespace Jules.PluralKit
                     {
                         using (var bitmap = new Bitmap(80, 80))
                         {
+                            
                             if (avatars.Count == 2)
                             {
                                 using (var g = Graphics.FromImage(bitmap))
                                 {
                                     g.DrawImage(avatars[0],
                                         new Rectangle(0, 0, 40, 80),
-                                        new Rectangle(0, 0, avatars[0].Width / 2, avatars[0].Height),
+                                        new Rectangle(avatars[0].Width/4, 0, avatars[0].Width/4*3, avatars[0].Height),
                                         GraphicsUnit.Pixel);
                                     g.DrawImage(avatars[1],
                                         new Rectangle(40, 0, 40, 80),
-                                        new Rectangle(avatars[1].Width / 2, 0, avatars[1].Width / 2, avatars[1].Height),
+                                        new Rectangle(avatars[1].Width/4, 0, avatars[1].Width/4*3, avatars[1].Height),
                                         GraphicsUnit.Pixel);
                                 }
                             }
-                            else if (avatars.Count >= 3)
+                            else
                             {
                                 using (var g = Graphics.FromImage(bitmap))
                                 {
                                     g.DrawImage(avatars[0],
-                                    new Rectangle(0, 0, 40, 40),
-                                    new Rectangle(0, 0, avatars[0].Width / 2, avatars[0].Height / 2),
-                                    GraphicsUnit.Pixel);
+                                        new Rectangle(0, 0, 40, 40),
+                                        new Rectangle(0, 0, avatars[0].Width, avatars[0].Height),
+                                        GraphicsUnit.Pixel);
                                     g.DrawImage(avatars[1],
                                         new Rectangle(40, 0, 40, 40),
-                                        new Rectangle(avatars[1].Width / 2, 0, avatars[1].Width / 2, avatars[1].Height / 2),
+                                        new Rectangle(0, 0, avatars[1].Width, avatars[1].Height),
                                         GraphicsUnit.Pixel);
                                     g.DrawImage(avatars[2],
                                         new Rectangle(0, 40, 40, 40),
-                                        new Rectangle(0, avatars[2].Height / 2, avatars[2].Width / 2, avatars[2].Height / 2),
+                                        new Rectangle(0, 0, avatars[2].Width, avatars[2].Height),
                                         GraphicsUnit.Pixel);
                                     if (avatars.Count >= 4)
                                     {
                                         g.DrawImage(avatars[3],
                                             new Rectangle(40, 40, 40, 40),
-                                            new Rectangle(avatars[3].Width / 2, avatars[3].Height / 2, avatars[3].Width / 2, avatars[3].Height / 2),
+                                            new Rectangle(0, 0, avatars[3].Width, avatars[3].Height),
                                             GraphicsUnit.Pixel);
+                                    }
+                                    else
+                                    {
+                                        var color = Color.FromArgb(255, 0, 0, 0);
+                                        bitmap.MakeTransparent(color);
+                                        using (var brush = new SolidBrush(color))
+                                        {
+                                            g.FillRectangle(brush, new Rectangle(40, 40, 40, 40));
+                                        }
                                     }
                                 }
                             }
@@ -178,7 +188,7 @@ namespace Jules.PluralKit
                                 request.Headers.Add("Authorization", $"Client-ID {this.config.ImgurId}");
                                 using (var stream = request.GetRequestStream())
                                 {
-                                    bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                                    bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
                                     stream.Close();
                                 }
                                 //request.ContentLength = byteArray.Length;
