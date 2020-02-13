@@ -34,19 +34,19 @@ namespace Jules.PluralKit
         [Alias("s")]
         public async Task SwitchAsync(params string[] memberNames)
         {
+            var user = Context.User;
+            if (user.IsBot || user.IsWebhook)
+            {
+                return;
+            }
+
             using (Context.Channel.EnterTypingState())
             {
                 if (memberNames.Length == 0)
                 {
                     throw new ArgumentNullException(nameof(memberNames));
                 }
-                var user = Context.User;
-
-                if (user.IsBot || user.IsWebhook)
-                {
-                    return;
-                }
-
+                
                 var system = await this.pk.GetSystem(user.Id);
                 if (system == null)
                 {
@@ -82,6 +82,7 @@ namespace Jules.PluralKit
                     string nameWithTag = $"{member.name} {system.tag}";
                     this.cache.SetFronter(user.Id, nameWithTag, member.avatar_url);
                     this.logger.LogInformation($"{user.Username} | {memberNames[0]} is now fronting");
+                    await (await ReplyAsync($"*")).DeleteAsync(); // to force typing notice to stop
                 }
                 else
                 {
@@ -225,7 +226,8 @@ namespace Jules.PluralKit
                     }
 
                     this.cache.SetFronter(user.Id, nameWithTag, avatarUrl);
-                    this.logger.LogInformation($"{user.Username} | {memberNames} are now co-fronting");
+                    this.logger.LogInformation($"{user.Username} | {string.Join("+", memberNames)} are now co-fronting");
+                    await (await ReplyAsync($"*")).DeleteAsync(); // to force typing notice to stop
                 }
             }
         }
